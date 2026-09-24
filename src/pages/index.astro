@@ -1,0 +1,25 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import ArticleCard from "../components/ArticleCard.astro";
+const tutorials = (await getCollection("tutoriales", ({ data }) => !data.draft)).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const articles = (await getCollection("articulos", ({ data }) => !data.draft)).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const news = (await getCollection("noticias", ({ data }) => !data.draft)).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const featured = [
+  ...tutorials.map((entry) => ({ entry, type: "tutoriales" })),
+  ...articles.map((entry) => ({ entry, type: "articulos" })),
+  ...news.map((entry) => ({ entry, type: "noticias" }))
+].sort((a, b) => b.entry.data.publishedAt.valueOf() - a.entry.data.publishedAt.valueOf())[0];
+---
+<Base title="Calvo Blog — tutoriales y artículos claros" description="Tutoriales, artículos, recursos y noticias técnicas en español.">
+  <section class="hero">
+    <div class="hero__meta"><span class="tag tag--solid">Biblioteca técnica</span><span class="hero__issue">Contenido claro y verificable</span></div>
+    <h1 class="hero__title"><span class="line"><em>Aprende</em> sin</span><span class="line">perder el <mark>contexto.</mark></span></h1>
+    <div class="hero__row"><p class="hero__lead">Tutoriales paso a paso, artículos explicativos y noticias que enlazan a sus fuentes.</p><div class="hero__cta"><a href="/tutoriales/" class="btn">Explorar tutoriales</a><a href="#proponer" class="btn btn--ghost">Proponer tema</a></div></div>
+  </section>
+  <section class="featured"><div class="section-head"><span class="section-head__num">01</span><h2>Contenido de la semana</h2></div>{featured && <article class="featured__card"><div class="featured__stamp">{featured.type === "tutoriales" ? featured.entry.data.level : featured.type === "noticias" ? "Noticia" : "Artículo"}</div><h2 class="featured__title"><a href={`/${featured.type}/${featured.entry.id}/`}>{featured.entry.data.title}</a></h2><p class="featured__excerpt">{featured.entry.data.description}</p><div class="featured__foot"><span class="tag">{featured.entry.data.category}</span><span class="tag">{featured.entry.data.readingTime}</span><span class="featured__arrow" aria-hidden="true">→</span></div></article>}</section>
+  <section class="articles"><div class="section-head"><span class="section-head__num">02</span><h2>Guías y tutoriales</h2></div><div class="articles__grid">{tutorials.slice(0, 3).map((entry) => <ArticleCard entry={entry} type="tutoriales" />)}</div><p class="section-link"><a href="/tutoriales/">Ver todas las guías →</a></p></section>
+  <section class="articles"><div class="section-head"><span class="section-head__num">03</span><h2>Artículos recientes</h2></div><div class="articles__grid">{articles.slice(0, 3).map((entry) => <ArticleCard entry={entry} type="articulos" />)}</div><p class="section-link"><a href="/articulos/">Ver todos los artículos →</a></p></section>
+  <section class="articles"><div class="section-head"><span class="section-head__num">04</span><h2>Noticias y actualizaciones</h2></div><div class="articles__grid">{news.slice(0, 3).map((entry) => <ArticleCard entry={entry} type="noticias" />)}</div><p class="section-link"><a href="/noticias/">Ver todas las noticias →</a></p></section>
+  <section class="subscribe" id="proponer"><div class="subscribe__inner"><h2 class="subscribe__title">¿Qué tema quieres ver <em>bien explicado</em>?</h2><form class="subscribe__form" name="propuesta-tema" method="POST" action="/gracias/" data-netlify="true" netlify-honeypot="bot-field"><input type="hidden" name="form-name" value="propuesta-tema" /><p class="honeypot"><label>No rellenes este campo <input name="bot-field" type="text" tabindex="-1" autocomplete="off" /></label></p><label class="sr-only" for="tema">Tema que propones</label><input id="tema" name="tema" type="text" placeholder="Ej. cómo funciona Docker por dentro…" minlength="5" maxlength="500" required /><label class="sr-only" for="email">Correo opcional</label><input id="email" name="email" type="email" placeholder="Tu correo (opcional)" autocomplete="email" /><button class="btn" type="submit">Proponer</button></form><p class="subscribe__hint">El correo es opcional y se usa únicamente para responder sobre tu propuesta.</p></div></section>
+</Base>

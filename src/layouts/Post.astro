@@ -1,0 +1,21 @@
+---
+import Base from "./Base.astro";
+const { entry, type, Content, headings } = Astro.props;
+const formattedDate = entry.data.publishedAt.toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" });
+---
+<Base title={`${entry.data.title} — Calvo Blog`} description={entry.data.description} current={type}>
+  <div class="article-layout">
+    <article class="article">
+      <nav class="breadcrumbs" aria-label="Migas de pan"><a href="/">Inicio</a><span>/</span><a href={`/${type}/`}>{type[0].toUpperCase() + type.slice(1)}</a><span>/</span><span>{entry.data.category}</span></nav>
+      <p class="eyebrow">{entry.data.category}</p>
+      <h1>{entry.data.title}</h1>
+      <p class="article__deck">{entry.data.description}</p>
+      <dl class="article-meta"><div><dt>Publicado</dt><dd>{formattedDate}</dd></div><div><dt>Lectura</dt><dd>{entry.data.readingTime}</dd></div>{entry.data.level && <div><dt>Nivel</dt><dd>{entry.data.level}</dd></div>}</dl>
+      {entry.data.cover && <img class="article__cover" src={entry.data.cover} alt={entry.data.coverAlt || ""} width="1200" height="675" loading="eager" />}
+      <div class="article-content"><Content /></div>
+      {entry.data.tags.length > 0 && <p class="article-tags">{entry.data.tags.map((tag) => <span class="tag">{tag}</span>)}</p>}
+      {type === "noticias" && entry.data.sourceUrl && <p class="related"><a href={entry.data.sourceUrl} target="_blank" rel="noopener noreferrer">Fuente: {entry.data.sourceName || entry.data.sourceUrl} ↗</a></p>}
+    </article>
+    {headings.length > 0 && <aside class="toc" aria-label="Tabla de contenidos"><strong>En esta página</strong><ol>{headings.filter((heading) => heading.depth <= 3).map((heading) => <li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol></aside>}
+  </div>
+</Base>

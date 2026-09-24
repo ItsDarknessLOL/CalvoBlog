@@ -1,0 +1,7 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+const entries = (await getCollection("tutoriales", ({ data }) => !data.draft)).sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+---
+<Base title="Tutoriales — Calvo Blog" current="tutoriales"><section class="listing"><p class="eyebrow">Tutoriales</p><h1>Aprende haciendo, con el contexto necesario.</h1><p class="listing__lead">Cada tutorial tiene requisitos, pasos comprobables y una URL propia.</p><div class="articles__grid">{entries.map((entry) => <ArticleCard entry={entry} type="tutoriales" />)}</div></section></Base>

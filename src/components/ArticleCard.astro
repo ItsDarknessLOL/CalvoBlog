@@ -1,0 +1,10 @@
+---
+const { entry, type } = Astro.props;
+const href = `/${type}/${entry.id}/`;
+---
+<a href={href} class="card">
+  <div class="card__meta"><span class="card__cat">{entry.data.category}</span><span>{entry.data.readingTime}</span></div>
+  <h3 class="card__title">{entry.data.title}</h3>
+  <p class="card__excerpt">{entry.data.description}</p>
+  <span class="card__detail">{entry.data.updatedAt ? "Actualizado" : "Publicado"} · {entry.data.publishedAt.toLocaleDateString("es-MX", { day: "numeric", month: "short", year: "numeric" })}</span>
+</a>

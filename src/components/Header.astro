@@ -1,0 +1,14 @@
+---
+const { current = "" } = Astro.props;
+---
+<header class="nav" id="nav">
+  <a class="nav__logo" href="/">Calvo<span>Blog</span></a>
+  <button class="nav__toggle" type="button" aria-label="Abrir menú" aria-expanded="false" data-menu-button>Menú</button>
+  <nav class="nav__links" aria-label="Navegación principal" data-menu>
+    <a href="/tutoriales/" aria-current={current === "tutoriales" ? "page" : undefined}>Tutoriales</a>
+    <a href="/articulos/" aria-current={current === "articulos" ? "page" : undefined}>Artículos</a>
+    <a href="/noticias/" aria-current={current === "noticias" ? "page" : undefined}>Noticias</a>
+    <a href="/recursos/" aria-current={current === "recursos" ? "page" : undefined}>Recursos</a>
+  </nav>
+  <a href="/#proponer" class="btn btn--small">Proponer tema</a>
+</header>
